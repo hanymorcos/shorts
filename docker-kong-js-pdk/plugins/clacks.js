@@ -9,20 +9,18 @@ class ClacksPlugin {
       this.publicKEY  = fs.readFileSync('/keys/public.key', 'utf8');
     }
   
-     processAuthorization(authHeader)
+     processAuthorization( authHeader)
     {
-
         let user = undefined;
         let pass = undefined;
         let type = undefined;
-
         if (authHeader != undefined)
         {
           let token = authHeader.split(' ')[1];
-          let type = authHeader.split(' ') [0];
+              type = authHeader.split(' ')[0];
           let auth = new Buffer.from(token,'base64').toString().split(':');
-          let user = auth[0].trim();
-          let pass = auth[1].trim();
+           user = auth[0].trim();
+           pass = auth[1].trim();
           
         }
   
@@ -45,7 +43,7 @@ class ClacksPlugin {
       
     }
 
-    verifyJWT(kong, token, issuer, expiration, audience)
+    verifyJWT(token, issuer, expiration, audience)
     {
        // SIGNING OPTIONS
        let signOptions = {
@@ -65,6 +63,7 @@ class ClacksPlugin {
 
     async access(kong) {
 
+      this.kong = kong;
       let authHeader = await kong.request.getHeader("Authorization")
 
       kong.log.warn(" auth header " + authHeader);
@@ -93,9 +92,7 @@ class ClacksPlugin {
         let cookies = cookie.parse(cookieHeader);
         let jwt = cookies["JWT"];
 
-     //  kong.log.warn(" print jwt " + jwt );
-
-        let ret = this.verifyJWT(kong, jwt, i, jwtExpiration, a);
+        let ret = this.verifyJWT(jwt, i, jwtExpiration, a);
 
         if (ret)
          await  kong.response.setHeader('Set-Cookie','JWT=' + jwt);
