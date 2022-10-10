@@ -8,9 +8,6 @@ services:
       - name: clacks
         config:
           jwt_expiration: "12h"
-      - name: file-log
-        config: 
-          path: /tmp/file.log
     routes:
       - name: jspath
         paths:
