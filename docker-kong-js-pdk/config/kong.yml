@@ -1,0 +1,15 @@
+_format_version: "2.1"
+_transform: true
+
+services:
+  - name: example-service
+    url: https://mockbin.org
+    plugins:
+      - name: clacks
+        config:
+          jwt_expiration: "12h"
+    routes:
+      - name: jspath
+        paths:
+        - /
+        
